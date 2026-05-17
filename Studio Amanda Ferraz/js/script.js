@@ -113,3 +113,15 @@ marker.addTo(map)
         </a>
     `)
      .openPopup()
+
+map.getContainer().setAttribute('tabindex', '-1');
+map.getContainer().addEventListener('click', function(e) {
+  e.stopPropagation();
+});
+
+document.addEventListener('click', function(e) {
+  const link = e.target.closest('a[href="#"]');
+  if (link && map.getContainer().contains(link)) {
+    e.preventDefault();
+  }
+});
