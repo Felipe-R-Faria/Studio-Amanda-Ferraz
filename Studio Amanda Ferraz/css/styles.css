@@ -839,17 +839,48 @@ font-size: 30px;
     color: #A7510F;
   }
 }
+/* ========================================================== */
+                  /* RESPONSIVIDADE DO CARROSSEL DO SALÃO */
+/* ========================================================== */
 
-/* carrosel MOBILE */
-
-@media screen and (max-width: 768px) {
-
+@media (max-width: 768px) {
+  /* 1. Remove o espaço gigante creme */
   .carrossel {
-    height: 100%;
+    height: auto;
+    min-height: 0;
+    margin-top: 0;
+    padding: 0;
+    display: block;
+  }
+
+  /* 2. Faz o banner ocupar a largura real e não deixar buracos */
+  .slide img {
+    width: 100% !important;
+    height: auto !important;
+    object-fit: contain;
+    display: block;
+  }
+
+  /* 3. Organiza as setas para não sumirem ou ficarem gigantes */
+  .prev, .next {
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    padding: 8px 5px !important;
+    background: rgba(0, 0, 0, 0.2) !important; /* Mais sutil no mobile */
+    font-size: 14px;
+    z-index: 100;
+  }
+
+  .prev { left: 5px !important; }
+  .next { right: 5px !important; }
+
+  /* 4. Ajuste da seção que vem LOGO ABAIXO do carrossel */
+  /* Verifique qual classe vem depois (ex: .servicos ou .cards) */
+  .servicos {
+    margin-top: 0 !important;
+    padding-top: 20px !important;
   }
 }
-
-
 
 @media screen and (max-width: 768px) {
 
