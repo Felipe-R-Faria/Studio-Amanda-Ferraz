@@ -41,14 +41,15 @@ html, body {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 1000;
+  z-index: 1050;
   
 }
 
 /* LOGO */
 .logo img {
-  max-height: 35px;
+  max-height: 40px;
   width: 100%;
+
 }
 
 /* MENU DESKTOP */
@@ -63,7 +64,7 @@ html, body {
 .menu a {
   color: white;
   text-decoration: none;
-  font-size: 16px;
+  font-size: 18px;
   transition: 0.3s;
 }
 
