@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const db = require("./db");
 const { sendPasswordResetEmail } = require("./emailService");
-require("dotenv").config();
+require("dotenv").config({ path: './js/.env' });
 
 // login
 router.post("/login", async (req, res) => {
@@ -32,6 +32,14 @@ router.post("/login", async (req, res) => {
       { expiresIn: "8h" }
     );
 
+    // Salva o token num cookie seguro (lido pelo servidor, não pelo JS do browser)
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: false,       // mude pra true quando usar HTTPS em produção
+      sameSite: "strict",
+      maxAge: 8 * 60 * 60 * 1000, // 8 horas
+    });
+
     res.json({
       message: "Login realizado com sucesso!",
       token,
@@ -43,8 +51,13 @@ router.post("/login", async (req, res) => {
   }
 });
 
-// solicitar redefinição de senha
+// logout
+router.post("/logout", (req, res) => {
+  res.clearCookie("token");
+  res.redirect("/login");
+});
 
+// solicitar redefinição de senha
 router.post("/forgot-password", async (req, res) => {
   const { email } = req.body;
 
@@ -88,8 +101,8 @@ router.post("/reset-password", async (req, res) => {
   if (!token || !newPassword)
     return res.status(400).json({ error: "Token e nova senha são obrigatórios." });
 
-  if (newPassword.length < 6)
-    return res.status(400).json({ error: "A senha deve ter pelo menos 6 caracteres." });
+  if (newPassword.length < 8)
+    return res.status(400).json({ error: "A senha deve ter pelo menos 8 caracteres." });
 
   try {
     const [rows] = await db.query(

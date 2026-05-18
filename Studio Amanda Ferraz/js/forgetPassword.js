@@ -11,7 +11,7 @@ async function sendEmail() {
   }
 
   try {
-    const response = await fetch("http://localhost:3000/api/auth/forgot-password", {
+    const response = await fetch("http://localhost:8081/api/auth/forgot-password", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email }),
@@ -20,7 +20,7 @@ async function sendEmail() {
     const data = await response.json();
 
     if (response.ok) {
-      window.location.href = "../pages/verifyEmail.html";
+      window.location.href = "/verify-email";
     } else {
       erro.textContent = data.error || "Erro ao enviar e-mail.";
       erro.style.display = "block";

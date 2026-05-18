@@ -4,12 +4,14 @@ const { engine } = require('express-handlebars');
 const mysql = require('mysql2');
 const fs = require('fs');
 const cors = require('cors');
+const cookieParser = require('cookie-parser'); // npm install cookie-parser
 require('dotenv').config({ path: './js/.env' });
 
 const app = express();
 const session = require('express-session');
 const flash = require('connect-flash');
 const authRoutes = require('./js/authroutes');
+const pageAuthMiddleware = require('./js/pageAuthMiddleware'); // middleware de proteção
 
 app.use(cors());
 app.use('/img', express.static('./img'));
@@ -19,6 +21,7 @@ app.use('/imagem', express.static('./imagem'));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser()); // lê os cookies das requisições
 app.use(fileUpload());
 app.use(session({
     secret: 'segredo',
@@ -50,48 +53,42 @@ conexao.connect(function(erro){
 // Rotas de Auth
 app.use('/api/auth', authRoutes);
 
-// Rotas das Views de Login
+// ─── Rotas PÚBLICAS (não precisam de login) ───────────────────────────────────
 app.get('/login', (req, res) => res.render('login'));
 app.get('/forgot-password', (req, res) => res.render('ForgetPassword'));
 app.get('/verify-email', (req, res) => res.render('verifyEmail'));
 app.get('/reset-password', (req, res) => res.render('RefindPassword'));
 
-// Rotas do Dashboard 
 app.get('/', function(req, res){
     let sql = 'SELECT * FROM tbservico';
 
     conexao.query(sql, function(erro, resultado){
         if(erro) throw erro;
 
-        console.log('Todos os serviços:', resultado);
-
-        const cabelo = resultado.filter(servico =>
-            servico.categoria === 'cabelo'
-        );
-
-        const cilios = resultado.filter(servico =>
-            servico.categoria === 'cilios'
-        );
-
-        console.log('Cabelo:', cabelo);
-        console.log('Cílios:', cilios);
+        const cabelo = resultado.filter(servico => servico.categoria === 'cabelo');
+        const cilios = resultado.filter(servico => servico.categoria === 'cilios');
 
         res.render('home', { cabelo, cilios });
     });
 });
 
-app.get('/gerenciar', function(req, res){
+// ─── Rotas PROTEGIDAS (pageAuthMiddleware bloqueia quem não está logado) ──────
+app.get('/dashboardhome', pageAuthMiddleware, function(req, res){
+    res.render('dashboardhome');
+});
+
+app.get('/gerenciar', pageAuthMiddleware, function(req, res){
     let mensagem = req.flash('mensagem');
     res.render('gerenciar', { 
         mensagem: mensagem.length > 0 ? mensagem[0] : null 
     });
 }); 
 
-app.get('/agendar', function(req, res){
+app.get('/agendar', pageAuthMiddleware, function(req, res){
     res.render('agendar');
 });
 
-app.get('/visualizar', function(req, res){
+app.get('/visualizar', pageAuthMiddleware, function(req, res){
     let sql = 'SELECT * FROM tbservico';
 
     conexao.query(sql, function(erro, resultado){
@@ -105,11 +102,7 @@ app.get('/visualizar', function(req, res){
     });
 });
 
-app.get('/dashboardhome', function(req, res){
-    res.render('dashboardhome');
-});
-
-app.post('/cadastrar', function(req, res){
+app.post('/cadastrar', pageAuthMiddleware, function(req, res){
     let titulo = req.body.titulo;
     let valor = req.body.valor;
     let categoria = req.body.categoria;
@@ -127,7 +120,7 @@ app.post('/cadastrar', function(req, res){
     });
 });
 
-app.get('/remover/:id/:imagem', function(req, res){
+app.get('/remover/:id/:imagem', pageAuthMiddleware, function(req, res){
     let sql = `DELETE FROM tbservico WHERE id = ${req.params.id}`;
     conexao.query(sql, function(erro, resultado){
         if(erro) throw erro;
@@ -139,7 +132,7 @@ app.get('/remover/:id/:imagem', function(req, res){
     });
 });
 
-app.get('/formularioAlterar/:id', function(req, res){
+app.get('/formularioAlterar/:id', pageAuthMiddleware, function(req, res){
     let sql = `SELECT * FROM tbservico WHERE id = ${req.params.id}`;
 
     conexao.query(sql, function(erro, resultado){
@@ -148,7 +141,7 @@ app.get('/formularioAlterar/:id', function(req, res){
     });
 });
 
-app.post('/editar', function(req, res){
+app.post('/editar', pageAuthMiddleware, function(req, res){
     let id = req.body.id;
     let titulo = req.body.titulo;
     let valor = req.body.valor;

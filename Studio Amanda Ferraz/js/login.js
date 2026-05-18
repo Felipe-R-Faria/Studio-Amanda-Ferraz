@@ -16,6 +16,7 @@ async function acessar() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password: senha }),
+      credentials: "include",
     });
 
     const data = await response.json();
@@ -26,10 +27,8 @@ async function acessar() {
       return;
     }
 
-    // Salva o token e redireciona pro dashboard
-    localStorage.setItem("token", data.token);
-    localStorage.setItem("user", JSON.stringify(data.user));
-    window.location.href = "../dashboardhome"; // ajusta o caminho se necessário
+    // Redireciona pro dashboard (token já salvo no cookie pelo servidor)
+    window.location.href = "/dashboardhome";
 
   } catch (err) {
     erro.textContent = "Não foi possível conectar ao servidor.";

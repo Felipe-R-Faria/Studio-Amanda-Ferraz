@@ -22,7 +22,7 @@ async function redefinir() {
   }
 
   try {
-    const response = await fetch("http://localhost:3000/api/auth/reset-password", {
+    const response = await fetch("http://localhost:8081/api/auth/reset-password", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ token, newPassword: senha }),
@@ -33,7 +33,7 @@ async function redefinir() {
     if (response.ok) {
       confirmacao.style.display = "block";
       setTimeout(() => {
-        window.location.href = "../pages/login.html";
+        window.location.href = "/login";
       }, 2000);
     } else {
       erro.textContent = data.error || "Erro ao redefinir senha.";

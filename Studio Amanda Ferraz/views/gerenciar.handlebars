@@ -188,7 +188,7 @@ document.getElementById("foto").addEventListener("change", function() {
         // localStorage.removeItem("usuarioLogado"); 
         
         // Redireciona para a página de login
-        window.location.href = "login.html"; 
+        fetch("/api/auth/logout", { method: "POST", credentials: "include" }).then(() => window.location.href = "/login"); 
     }
         </script>
 

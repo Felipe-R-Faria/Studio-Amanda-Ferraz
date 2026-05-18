@@ -112,9 +112,9 @@
         modalSair.close();
     }
 
-    function confirmarLogout() {
-        
-        window.location.href = "login.html"; 
+    async function confirmarLogout() {
+        await fetch("/api/auth/logout", { method: "POST" });
+        window.location.href = "/login";
     }
         </script>
        <script>
