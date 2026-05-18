@@ -3,27 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Esqueceu a Senha</title>
-    <link rel="stylesheet" href="/css/ForgetPassword.css">
+    <title>Verify</title>
+    <link rel="stylesheet" href="/css/verify.css">
 </head>
 <body>
-    <div class="Main">
-        <div class="image"><img src="/img/homem.png" alt="Forget-Password-img"></div>
+    <div class="main">
+        <div class="img"><img src="/img/email.png" alt="email-verify-image"></div>
         <div class="info">
-            <div class="text">
-                <p>Esqueceu a Senha?</p>
-                <p>Digite seu e-mail para receber um link de redefinição de senha.</p>
-            </div>
-            <div class="dados">
-                <input type="email" id="email" placeholder="Email">
-                <p id="erro" style="color: red; font-size: 0.85rem; display: none;"></p>
-            </div>
-            <div class="btn">
-                <button type="submit" onclick="sendEmail()">Enviar</button>
-                <button><a href="/login">Cancelar</a></button>
-            </div>
+            <h4>Verifique seu Email</h4>
+            <p>Enviamos um link para seu e-mail.<br>
+            Verifique sua caixa de entrada.</p>
+            <h5>Link de verificação enviado! <a href="/login">Faça Login novamente.</a></h5>
         </div>
     </div>
-    <script src="/js/forgetPassword.js"></script>
 </body>
 </html>
