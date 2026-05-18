@@ -141,6 +141,31 @@ app.get('/formularioAlterar/:id', pageAuthMiddleware, function(req, res){
     });
 });
 
+app.get('/api/stats', function(req, res) {
+    const sqlServicos = 'SELECT COUNT(*) as total FROM tbservico';
+    const sqlImagens  = 'SELECT COUNT(*) as total FROM tbservico WHERE imagem IS NOT NULL AND imagem != ""';
+    const sqlSemana   = `
+        SELECT COUNT(*) as total FROM tbservico 
+        WHERE imagem IS NOT NULL AND imagem != ""
+        AND id >= (SELECT COALESCE(MAX(id), 0) - 7 FROM tbservico)
+    `;
+
+    conexao.query(sqlServicos, function(erroS, resServicos) {
+        if (erroS) return res.status(500).json({ erro: 'Erro ao buscar serviços' });
+
+        conexao.query(sqlImagens, function(erroI, resImagens) {
+            if (erroI) return res.status(500).json({ erro: 'Erro ao buscar imagens' });
+
+
+                res.json({
+                    servicos:     resServicos[0].total,
+                    imagens:      resImagens[0].total,
+                  
+                });
+            });
+        });
+    });
+
 app.post('/editar', pageAuthMiddleware, function(req, res){
     let id = req.body.id;
     let titulo = req.body.titulo;
