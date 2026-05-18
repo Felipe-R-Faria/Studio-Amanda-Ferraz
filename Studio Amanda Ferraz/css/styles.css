@@ -86,7 +86,11 @@ html, body {
   text-decoration: none;
 }
 .btn-agendar:hover {
-  background: #fff;
+    background: #8b4513;
+    color: #F5F0E6;
+    border: 2px solid #F5F0E6;
+   transition: 1s;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.2);
 }
 
 /* HAMBURGUER */
@@ -549,13 +553,13 @@ html, body {
   margin-top: 2rem;
   display: inline-block;
   padding: 14px 28px;
-  background-color: var(--marrom);   /* cor principal */
-  color: #fff;                       /* texto branco */
+  background-color: var(--marrom);   
+  color: #fff;                       
   font-family: 'Urbanist', sans-serif;
   font-size: 1.8rem;
   font-weight: 700;
   text-transform: uppercase;
-  border-radius: 4px;               /* bordas arredondadas */
+  border-radius: 4px;               
   text-decoration: none;
   transition: all 0.3s ease;
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
@@ -563,8 +567,11 @@ html, body {
 
 /* Hover */
 .see-more-btn:hover {
-  background-color: #a0522d;         /* tom mais claro/escuro do marrom */
+  background-color: #fff;      
+  color: #863B0A;  
+  border: 2px solid #fff;
   transform: translateY(-3px);
+  transition: 1s;
   box-shadow: 0 6px 18px rgba(0,0,0,0.2);
 }
 
