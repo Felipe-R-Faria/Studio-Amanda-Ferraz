@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/dashboard.css">
+    <title>Alterar Serviço - Studio Amanda Ferraz</title>
+</head>
+<body>
+    <div class="container-dashboard">
+        <div class="menu-dashboard">
+            <div class="container-logo-menu">
+                <img src="/img/logo-menu-dashboard.png" alt="logo" id="imagem-logo-menu">
+            </div>
+            <div class="icon-pessoa-menu">
+                <img src="/img/pessoa.png" alt="icon pessoa">
+                <p>Amanda e Eduarda</p>
+            </div>
+            <div class="links-menu-dashboard">
+                <li><img src="/img/casa.png" alt="casa"><a href="/dashboardhome">Dashboard</a></li>
+                <li><img src="/img/editar.png" alt="editar"><a href="/gerenciar">Gerenciar serviços</a></li>
+                <li><img src="/img/galeria.png" alt="galeria"><a href="/visualizar">Visualizar serviços</a></li>
+                <li><img src="/img/sair.png" alt="sair"><a href="/login">Sair</a></li>
+            </div>
+        </div>
+
+        <div class="adc_servico">
+            <p>Alterar Serviço</p>
+            <form action="/editar" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="id" value="{{servico.id}}">
+                <input type="hidden" name="imagem_atual" value="{{servico.imagem}}">
+
+                <div class="divisao-form">
+                    <div class="formulario_adicionar">
+                        <label for="titulo">Título do serviço:</label>
+                        <input type="text" id="titulo" name="titulo" value="{{servico.nome}}" required>
+
+                        <label for="valor">Valor do serviço (R$):</label>
+                        <input type="number" id="valor" name="valor" step="0.01" value="{{servico.valor}}" required>
+
+                        <label for="descricao">Descrição do serviço:</label>
+                        <input type="text" id="descricao" name="descricao" value="{{servico.descricao}}" required>
+                    </div>
+
+                    <div class="inserir_img">
+                        <img src="/imagem/{{servico.imagem}}" alt="Preview" style="max-height: 120px; object-fit: cover; border-radius: 8px;">
+                        <label for="foto" class="custom-file" style="margin-top: 10px;">Trocar imagem</label>
+                        <input type="file" id="foto" name="imagem" accept="image/*" hidden>
+                        <h6 id="nome-arquivo">{{servico.imagem}}</h6>
+                    </div>
+                </div>
+
+                <div class="btn_enviar" style="display: flex; gap: 12px;">
+                    <button type="submit" class="btn-submit">Salvar Alterações</button>
+                    <a href="/visualizar" class="btn btn-secondary" style="display: flex; align-items: center; border-radius: 8px;">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+    document.getElementById("foto").addEventListener("change", function() {
+        const nome = this.files[0]?.name || "Nenhum arquivo escolhido";
+        document.getElementById("nome-arquivo").textContent = nome;
+    });
+    </script>
+</body>
+</html>

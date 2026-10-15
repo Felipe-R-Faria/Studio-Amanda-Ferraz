@@ -1,0 +1,7 @@
+{
+  "name": "Studio Amanda Ferraz",
+  "description": "Website e painel administrativo para Studio Amanda Ferraz, salão de beleza especializado em cabelos e cílios.",
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

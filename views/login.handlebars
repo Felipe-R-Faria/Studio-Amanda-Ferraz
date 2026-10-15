@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Studio Amanda Ferraz</title>
+    <link rel="stylesheet" href="/css/login.css">
+</head>
+<body>
+    <div class="Main-login">
+        <div class="image"><img src="/img/mulher.png" alt="Studio Amanda Ferraz"></div>
+        <div class="info">
+            <div class="text">
+                <p>Login</p>
+                <p>Sejam Bem-Vindas!</p>
+            </div>
+            <div class="info-dados">
+                <input type="email" placeholder="Email" id="email" value="admin@studio.com">
+                <input type="password" placeholder="Senha" id="senha" value="admin123">
+                <p id="erro" style="color: #dc2626; font-size: 0.85rem; display: none; margin-top: 6px;"></p>
+                <small style="color: #6b7280; font-size: 0.75rem; display: block; margin-top: 4px; text-align: left;">
+                    Acesso teste: admin@studio.com / admin123
+                </small>
+            </div>
+            <div class="btn">
+                <button type="submit" onclick="acessar()">Entrar</button>
+                <a href="/forgot-password">Esqueceu a Senha? aperte aqui</a>
+            </div>
+        </div>
+    </div>
+    <script src="/js/login.js"></script>
+</body>
+</html>

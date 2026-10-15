@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/dashboard.css">
+    <title>Visualizar Serviços - Studio Amanda Ferraz</title>
+</head>
+<body>
+    <div class="container-dashboard">
+        <button class="btn-menu" onclick="toggleMenu()">
+            <span id="icone-menu">☰</span>
+        </button>
+        <div class="menu-dashboard">
+            <div class="container-logo-menu">
+                <img src="/img/logo-menu-dashboard.png" alt="logo" id="imagem-logo-menu">
+            </div>
+            <div class="icon-pessoa-menu">
+                <img src="/img/pessoa.png" alt="icon pessoa">
+                <p>Amanda e Eduarda</p>
+            </div>
+            <div class="links-menu-dashboard">
+                <li><img src="/img/casa.png" alt="casa"><a href="/dashboardhome">Dashboard</a></li>
+                <li><img src="/img/editar.png" alt="editar"><a href="/gerenciar">Gerenciar serviços</a></li>
+                <li><img src="/img/galeria.png" alt="galeria"><a href="/visualizar">Visualizar serviços</a></li>
+                <li><img src="/img/sair.png" alt="sair"><a href="#" id="btnSair" onclick="abrirModalSair(event)">Sair</a></li>
+            </div>
+        </div>
+
+        <dialog id="modal-logout" class="modal-conteudo">
+            <h2>Confirmar Saída</h2>
+            <p>Deseja realmente sair da dashboard?</p>
+            
+            <div class="modal-botoes">
+                <button class="btn-confirmar" onclick="confirmarLogout()">Sair</button>
+                <button class="btn-cancelar" onclick="fecharModalSair()">Cancelar</button>
+            </div>
+        </dialog>
+
+        <div class="home-dashboard">
+            <section class="secao-visualizar">
+                <h2>Visualizar serviços</h2>
+
+                <!-- CARROSSEL -->
+                <div id="area-carrossel">
+                    <!-- Estado vazio -->
+                    <div class="estado-vazio" id="estado-vazio" style="{{#if servicos.length}}display:none;{{else}}display:block;{{/if}}">
+                        <i class="fa-regular fa-image" style="font-size: 3rem; margin-bottom: 12px; color: #a7510f;"></i>
+                        <p>Nenhum serviço cadastrado ainda.</p>
+                        <p>Vá em <a href="/gerenciar">Gerenciar serviços</a> para adicionar o primeiro!</p>
+                    </div>
+
+                    <!-- Carrossel -->
+                    <div class="carrossel-wrapper" id="carrossel-wrapper" style="{{#if servicos.length}}display:flex;{{else}}display:none;{{/if}}">
+                        <button class="btn-nav" id="btn-prev" onclick="moverCarrossel(-1)" aria-label="Anterior">
+                            <i class="fa-solid fa-chevron-left"></i>
+                        </button>
+
+                        <div class="carrossel-track-container">
+                            <div class="carrossel-track" id="carrossel-track">
+                                {{#each servicos}}
+                                <div class="card-servico">
+                                    <img 
+                                        class="card-servico-img"
+                                        src="/imagem/{{imagem}}"
+                                        alt="{{nome}}"
+                                    >
+
+                                    <div class="card-servico-body">
+                                        <div class="card-servico-titulo-row">
+                                            <p class="card-servico-titulo">{{nome}}</p>
+                                            <div class="card-servico-acoes">
+                                                <button class="btn-acao" onclick="abrirModalAlterar({{id}}, '{{nome}}', '{{valor}}', '{{descricao}}', '{{imagem}}')">
+                                                    <i class="fa-solid fa-pen"></i>
+                                                </button>
+                                                <a href="/remover/{{id}}/{{imagem}}" class="btn-acao excluir" onclick="return confirm('Tem certeza que deseja excluir este serviço?')">
+                                                    <i class="fa-solid fa-trash"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <span class="card-servico-categoria">{{categoria}}</span>
+                                        <p class="card-servico-desc">{{descricao}}</p>
+                                        <p class="card-servico-valor">R$ {{valor}}</p>
+                                    </div>
+                                </div>
+                                {{/each}}
+                            </div>
+                        </div>
+
+                        <button class="btn-nav" id="btn-next" onclick="moverCarrossel(1)" aria-label="Próximo">
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </button>
+                    </div>
+
+                    <!-- Dots de navegação -->
+                    <div class="carrossel-dots" id="carrossel-dots"></div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Modal Alterar -->
+    <dialog id="modal-alterar">
+        <h2>Alterar Serviço</h2>
+
+        <form id="form-alterar" action="/editar" method="POST" enctype="multipart/form-data">
+            <input type="hidden" id="alterar-id" name="id">
+            <input type="hidden" id="alterar-imagem-atual" name="imagem_atual">
+
+            <img id="alterar-preview" src="" alt="preview" style="max-height: 120px; object-fit: cover; border-radius: 8px; margin: 10px auto; display: block;">
+            
+            <label for="alterar-nome">Nome</label>
+            <input type="text" id="alterar-nome" name="titulo" required> 
+            
+            <label for="alterar-valor">Valor (R$)</label>
+            <input type="number" id="alterar-valor" name="valor" step="0.01" required>
+
+            <label for="alterar-descricao">Descrição</label>
+            <input type="text" id="alterar-descricao" name="descricao" required>
+
+            <label class="custom-file" for="alterar-imagem">Trocar imagem</label>
+            <input type="file" id="alterar-imagem" name="imagem" accept="image/*" style="display:none">
+
+            <div class="modal-botoes">
+                <button type="button" class="btn-confirmar" onclick="document.getElementById('form-alterar').submit()">Salvar</button>
+                <button type="button" class="btn-cancelar" onclick="document.getElementById('modal-alterar').close()">Cancelar</button>
+            </div>
+        </form>
+    </dialog>
+
+    <script>
+    const servicos = document.querySelectorAll('.card-servico');
+    let indiceAtual = 0;
+    let cardsPorVez = 3;
+
+    function renderizarCarrossel() {
+        const track = document.getElementById('carrossel-track');
+        const wrapper = document.getElementById('carrossel-wrapper');
+        const vazio = document.getElementById('estado-vazio');
+        const dots = document.getElementById('carrossel-dots');
+
+        if (servicos.length === 0) {
+            if (vazio) vazio.style.display = 'block';
+            if (wrapper) wrapper.style.display = 'none';
+            if (dots) dots.innerHTML = '';
+            return;
+        }
+
+        if (vazio) vazio.style.display = 'none';
+        if (wrapper) wrapper.style.display = 'flex';
+
+        atualizarCardsPorVez();
+        renderizarDots();
+        aplicarPosicao(false);
+    }
+
+    function atualizarCardsPorVez() {
+        const largura = window.innerWidth;
+        if (largura <= 560) cardsPorVez = 1;
+        else if (largura <= 900) cardsPorVez = 2;
+        else cardsPorVez = 3;
+
+        const maxIndice = Math.max(0, servicos.length - cardsPorVez);
+        if (indiceAtual > maxIndice) indiceAtual = maxIndice;
+    }
+
+    function totalPaginas() {
+        return Math.max(1, servicos.length - cardsPorVez + 1);
+    }
+
+    function renderizarDots() {
+        const dots = document.getElementById('carrossel-dots');
+        if (!dots) return;
+        const total = totalPaginas();
+
+        if (total <= 1) {
+            dots.innerHTML = '';
+            return;
+        }
+
+        dots.innerHTML = Array.from({ length: total }, (_, i) =>
+            `<button class="dot ${i === indiceAtual ? 'ativo' : ''}"
+                     onclick="irParaPagina(${i})"
+                     aria-label="Ir para posição ${i + 1}"></button>`
+        ).join('');
+    }
+
+    function atualizarDots() {
+        document.querySelectorAll('.dot').forEach((dot, i) => {
+            dot.classList.toggle('ativo', i === indiceAtual);
+        });
+    }
+
+    function aplicarPosicao(animado = true) {
+        const track = document.getElementById('carrossel-track');
+        const container = document.querySelector('.carrossel-track-container');
+        if (!track || !container) return;
+
+        const gap = 19.2;
+        const cardLargura = (container.offsetWidth - gap * (cardsPorVez - 1)) / cardsPorVez;
+        const deslocamento = indiceAtual * (cardLargura + gap);
+
+        track.style.transition = animado ? 'transform 0.45s cubic-bezier(0.4, 0, 0.2, 1)' : 'none';
+        track.style.transform = `translateX(-${deslocamento}px)`;
+
+        const prevBtn = document.getElementById('btn-prev');
+        const nextBtn = document.getElementById('btn-next');
+        if (prevBtn) prevBtn.disabled = indiceAtual === 0;
+        if (nextBtn) nextBtn.disabled = indiceAtual >= totalPaginas() - 1;
+
+        atualizarDots();
+    }
+
+    function moverCarrossel(direcao) {
+        const maxIndice = totalPaginas() - 1;
+        indiceAtual = Math.max(0, Math.min(indiceAtual + direcao, maxIndice));
+        aplicarPosicao();
+    }
+
+    function irParaPagina(pagina) {
+        indiceAtual = pagina;
+        aplicarPosicao();
+    }
+
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+            atualizarCardsPorVez();
+            renderizarDots();
+            aplicarPosicao(false);
+        }, 150);
+    });
+
+    function toggleMenu() {
+        const menu = document.querySelector('.menu-dashboard');
+        const icone = document.getElementById('icone-menu');
+        menu.classList.toggle('ativo');
+        icone.innerHTML = menu.classList.contains('ativo') ? '✖' : '☰';
+    }
+
+    const modalSair = document.getElementById("modal-logout");
+
+    function abrirModalSair(event) {
+        event.preventDefault();
+        modalSair.showModal();
+    }
+
+    function fecharModalSair() {
+        modalSair.close();
+    }
+
+    function confirmarLogout() {
+        fetch("/api/auth/logout", { method: "POST", credentials: "include" })
+            .then(() => window.location.href = "/login")
+            .catch(() => window.location.href = "/login");
+    }
+
+    function abrirModalAlterar(id, nome, valor, descricao, imagem) {
+        document.getElementById('alterar-id').value = id;
+        document.getElementById('alterar-imagem-atual').value = imagem;
+        document.getElementById('alterar-nome').value = nome;
+        document.getElementById('alterar-valor').value = valor;
+        document.getElementById('alterar-descricao').value = descricao;
+        document.getElementById('alterar-preview').src = '/imagem/' + imagem;
+        document.getElementById('modal-alterar').showModal();
+    }
+
+    document.getElementById('alterar-imagem').addEventListener('change', function() {
+        if (this.files[0]) {
+            document.getElementById('alterar-preview').src = URL.createObjectURL(this.files[0]);
+        }
+    });
+
+    renderizarCarrossel();
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    {{#if mensagem}}
+    <script>
+    window.onload = function() {
+        Swal.fire({
+            title: 'Sucesso!',
+            text: '{{mensagem}}',
+            icon: 'success',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#863B0A'
+        });
+    }
+    </script>
+    {{/if}}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</body>
+</html>

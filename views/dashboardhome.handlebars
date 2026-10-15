@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <link rel="stylesheet" href="./../css/dashboard.css">
+    <title>Dashboard</title>
+</head>
+<body>
+        <div class="container-dashboard">
+            <button class="btn-menu" onclick="toggleMenu()">
+    <span id="icone-menu">☰</span>
+</button>
+            <div class="menu-dashboard">
+                <div class="container-logo-menu">
+                    <img src="../img/logo-menu-dashboard.png" alt="logo" id="imagem-logo-menu">
+                </div>
+                <div class="icon-pessoa-menu">
+                    <img src="../img/pessoa.png" alt="icon pessoa">
+                    <p>Amanda e Eduarda</p>
+                </div>
+                <div class="links-menu-dashboard">
+                    <li><img src="/img/casa.png" alt="casa"><a href="/dashboardhome">Dashboard</a></li>
+                    <li><img src="/img/editar.png" alt="casa"><a href="/gerenciar">Gerenciar serviços</a></li>
+                    <li><img src="/img/galeria.png" alt="casa"><a href="/visualizar">Visualizar serviços</a></li>
+                    <li> <img src="/img/sair.png" alt="sair">
+    <a href="#" id="btnSair" onclick="abrirModalSair(event)">Sair</a></li>
+                </div>
+            </div>
+            
+            <div class="home-dashboard">
+                <div class="boas-vindas">
+                    <div class="texto-boas-vindas">
+                        <p>Sejam bem vindas! <br>
+                            Este é o painel administrativo
+                        </p>
+                       
+                    </div>
+                    <img src="/img/clear.png" alt="beleza">
+                </div>
+                
+                <div class="cards-inicio">
+                    <div class="card" style="width: 30rem;" id="card-menina">
+                        <div class="card-body">
+                            <div class="divisao">
+                                <p class="card-text">Organize e atualize seus serviços de cabelo e cílios com facilidade, mantendo seu catálogo sempre impecável.</p>
+                                <img src="/img/img_menina.png" alt="menina">
+                            </div>
+                            
+                            <a href="/visualizar" class="link-card">Organizar</a>
+                          
+                        </div>
+                    </div>
+                    <div class="texto-cards-incio">
+                        <p>Aqui você pode gerenciar as imagens e conteúdos do seu salão de forma simples e rápida.</p>
+                    </div>
+                </div>
+
+                <div class="cards-geral">
+                    <div class="card" style="width: 20rem;">
+                        <div class="card-body">
+                                <p class="card-text" id="texto-visao">Visão geral</p>
+                                <ul>
+                                    <li><img src="/img/camera.png" alt="camera"> <span id="stat-imagens">...</span> imagens cadastradas</li>
+                                    <li><img src="/img/face.png" alt="face"> <span id="stat-servicos">...</span> serviços cadastrados</li>
+                                
+                                </ul>
+                                
+                        </div>
+                    </div>
+                    <div class="card" style="width: 20rem;">
+                        <div class="card-body">
+                            <div class="divisao" id="adicione-img">
+                                <p class="card-text">Adicione imagens e textos no seu site</p>
+                                <img src="/img/fotos.png" alt="galeria de fotos" id="galeria-fotos">
+                            </div>
+                            
+                            <a href="/gerenciar" class="link-card">Adicionar</a>
+                          
+                        </div>
+                    </div>
+                    <div class="card" style="width: 20rem;">
+                        <div class="card-body" id="mantenha">
+                                <p class="card-text">Mantenha sua galeria atualizada para atrair mais clientes! <img src="/img/star.png" alt="estrela"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <dialog id="modal-logout" class="modal-conteudo">
+            <h2>Confirmar Saída</h2>
+            <p>Deseja realmente sair da dashboard?</p>
+            
+            <div class="modal-botoes">
+                <button class="btn-confirmar" onclick="confirmarLogout()">Sair</button>
+                <button class="btn-cancelar" onclick="fecharModalSair()">Cancelar</button>
+            </div>
+        </dialog>
+
+        <script>
+        const modalSair = document.getElementById("modal-logout");
+
+        function abrirModalSair(event) {
+            event.preventDefault();
+            modalSair.showModal();
+        }
+
+        function fecharModalSair() {
+            modalSair.close();
+        }
+
+        function confirmarLogout() {
+            fetch("/api/auth/logout", { method: "POST", credentials: "include" })
+                .then(() => window.location.href = "/login")
+                .catch(() => window.location.href = "/login");
+        }
+        </script>
+        <script>
+        function toggleMenu() {
+            const menu = document.querySelector('.menu-dashboard');
+            const icone = document.getElementById('icone-menu');
+
+            menu.classList.toggle('ativo');
+
+            if (menu.classList.contains('ativo')) {
+                icone.innerHTML = '✖'; 
+            } else {
+                icone.innerHTML = '☰'; 
+            }
+        }
+        </script>
+
+        <script>
+        async function carregarStats() {
+            try {
+                const resposta = await fetch('/api/stats');
+                const dados = await resposta.json();
+
+                const elImg = document.getElementById('stat-imagens');
+                const elServ = document.getElementById('stat-servicos');
+                const elSem = document.getElementById('stat-semana');
+
+                if (elImg) elImg.textContent = dados.imagens ?? 0;
+                if (elServ) elServ.textContent = dados.servicos ?? 0;
+                if (elSem) elSem.textContent = dados.novasSemana ?? 0;
+            } catch (erro) {
+                console.error('Erro ao carregar estatísticas:', erro);
+            }
+        }
+
+        carregarStats();
+        </script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</body>
+</html>
