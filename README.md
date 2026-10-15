@@ -285,6 +285,56 @@ INSERT INTO tbservico (nome, valor, descricao, imagem, categoria) VALUES
 
 ---
 
+## 👥 Integrantes do Projeto
+
+Agradecimentos especiais a todos os desenvolvedores e colaboradores que participaram da concepção, design e desenvolvimento desta aplicação:
+
+<div align="center">
+  <table>
+    <tr>
+      <td align="center">
+        <a href="https://github.com/niczonha">
+          <img src="https://github.com/niczonha.png" width="100px;" style="border-radius:50%;" alt="Nicoly Santos"/><br>
+          <sub><b>Nicoly Santos</b></sub><br>
+          <sub><code>@niczonha</code></sub>
+        </a>
+      </td>
+      <td align="center">
+        <a href="https://github.com/Nicollas-ls">
+          <img src="https://github.com/Nicollas-ls.png" width="100px;" style="border-radius:50%;" alt="Nicollas"/><br>
+          <sub><b>Nicollas</b></sub><br>
+          <sub><code>@Nicollas-ls</code></sub>
+        </a>
+      </td>
+      <td align="center">
+        <a href="https://github.com/Fabinh0ne">
+          <img src="https://github.com/Fabinh0ne.png" width="100px;" style="border-radius:50%;" alt="Fabinho"/><br>
+          <sub><b>Fabinho</b></sub><br>
+          <sub><code>@Fabinh0ne</code></sub>
+        </a>
+      </td>
+      <td align="center">
+        <a href="https://github.com/Felipe-R-Faria">
+          <img src="https://github.com/Felipe-R-Faria.png" width="100px;" style="border-radius:50%;" alt="Felipe R."/><br>
+          <sub><b>Felipe R.</b></sub><br>
+          <sub><code>@Felipe-R-Faria</code></sub>
+        </a>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<br>
+
+| Integrante | Usuário GitHub | Link de Acesso |
+|---|---|---|
+| **Nicoly Santos** | `@niczonha` | [github.com/niczonha](https://github.com/niczonha) |
+| **Nicollas** | `@Nicollas-ls` | [github.com/Nicollas-ls](https://github.com/Nicollas-ls) |
+| **Fabinho** | `@Fabinh0ne` | [github.com/Fabinh0ne](https://github.com/Fabinh0ne) |
+| **Felipe R. Faria** | `@Felipe-R-Faria` | [github.com/Felipe-R-Faria](https://github.com/Felipe-R-Faria) |
+
+---
+
 ## 📄 Licença
 
 Este projeto é disponibilizado sob a licença [MIT](LICENSE).
